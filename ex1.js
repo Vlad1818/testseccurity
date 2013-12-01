@@ -7,6 +7,9 @@ sites = ['google.com', 'facebook.com', 'youtube.com', 'yahoo.com',
 function HandleRequest(req, res){
 var start = new Date().getTime();
  res.writeHead(200, {'Content-Type': 'text/html'});
+res.write('<script>');
+res.write('alert("My First JavaScript");');
+res.write('</script>');
 res.write('<html>');
 res.write('<body>');
 res.write('This site hacks you up!');
