@@ -31,5 +31,5 @@ app.get('/', function(req, res, next){
 });
 
 
-app.listen(9615);
+app.listen(process.env.PORT || 9615);
 console.log('server up');
