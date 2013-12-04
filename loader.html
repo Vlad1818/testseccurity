@@ -3,97 +3,59 @@
 <script type="text/javascript">
 	i=0;
 	sites = ['http://google.com', 'http://facebook.com', 'http://youtube.com', 'http://yahoo.com', 
-	'http://wikipedia.org', 'http://linkedin.com', 'http://live.com', 'http://twitter.com', 'http://amazon.com', 'http://taobao.com'];
-	firstLoad=[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]];
-	cachedTimes=[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]];
+	'http://wikipedia.org', 'http://linkedin.com', 'http://live.com', 'http://twitter.com', 'http://amazon.com'];
+	firstLoad=[0,0,0,0,0,0,0,0,0,0];
+	cachedTimes=[0,0,0,0,0,0,0,0,0,0];
 	viewRatios=[1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2];
-	var temp = (new Date()).getTime();
-	beforeload = [temp,temp,temp,temp,temp]
-	loadCount = [0,0,0,0,0];
-	const TIMES_TO_LOAD=2;
-	finishedFrames = [0,0,0,0,0];
-	finishedSites = 0;
+	beforeload = (new Date()).getTime();
+	loadCount = 0;
+	const TIMES_TO_LOAD=4;
 	
-	function pageloadingtime(pagenum)
+	function pageloadingtime()
 	{
-		var num = parseInt(pagenum) - 1;
 		var afterload = (new Date()).getTime();
-		var seconds = (afterload-beforeload[num])/1000;
-		if(loadCount[num] == 0){
-			firstLoad[i][num]=seconds;}
+		var seconds = (afterload-beforeload)/1000;
+		if(loadCount == 0){
+			firstLoad[i]=seconds;}
 		else{
-			cachedTimes[i][num]+=seconds;}
-		document.getElementById("loadingtime"+pagenum).innerHTML = document.getElementById("loadingtime"+pagenum).innerHTML+"<font color='red'>"+sites[i]+" Load "+(loadCount[num]+1)+" took " + seconds + " seconds</font></br>";
-		loadCount[num]++;
-		if(loadCount[num]==TIMES_TO_LOAD){
-			loadCount[num]=0;
-			finishedFrames[num]++;
-		}
-		else{
-			var f = document.getElementById('iframe'+pagenum);
-			beforeload[num] = (new Date()).getTime();
-			f.src = sites[i];
-		}
-		if(getSum(finishedFrames)==5){
-			finishedFrames=[0,0,0,0,0];
-			printFinalData(i);
-		}
-	}
-	
-	function getSum(){
-		var sum=0;
-		for (var j=0;j<5;j++){
-			sum+=finishedFrames[j];
-		}
-		return sum;
-	}
-	
-	function printFinalData(siteNum)
-	{
-		var num= parseInt(siteNum);
-	//	for (var j=0;j<sites.length;j++)
-	//	{ 
-			var first = getAvgFirstLoad(num);
-			var cached = getAvgCacheLoad(num);
-			document.getElementById("loadingtimefinal").innerHTML = document.getElementById("loadingtimefinal").innerHTML+"<font color='blue'>"+sites[num]+" first load took "+first+" and cached load took " + cached + "</font></br>";
-	//	}
-	//	for (var j=0;j<sites.length;j++)
-	//	{ 
-			var first = getAvgFirstLoad(num);
-			var cached = getAvgCacheLoad(num);
-			if(cached*viewRatios[num]>=first)
-				document.getElementById("loadingtimefinal").innerHTML = document.getElementById("loadingtimefinal").innerHTML+"<font color='green'>You have visited "+sites[num]+"!</font></br>";
-			else
-				document.getElementById("loadingtimefinal").innerHTML = document.getElementById("loadingtimefinal").innerHTML+"<font color='purple'>You did not visit "+sites[num]+"!</font></br>";
-	//	}
+			cachedTimes[i]+=seconds;}
+		document.getElementById("loadingtime").innerHTML = document.getElementById("loadingtime").innerHTML+"<font color='red'>"+sites[i]+" Load "+(loadCount+1)+" took " + seconds + " seconds</font></br>";
 		i++;
-		for (var j=1;j<=5;j++){
-			var f = document.getElementById('iframe'+j);
-			beforeload[j] = (new Date()).getTime();
-			f.src = sites[i];
+		if(i==sites.length){
+			i=0;
+			loadCount++;
+		}
+		if(loadCount!=TIMES_TO_LOAD){
+			var f = document.getElementById('iframe1');
+			if(i<sites.length){
+				beforeload = (new Date()).getTime();
+				f.src = sites[i];
+			}
+		}
+		else{
+			printFinalData();
 		}
 	}
-	function getAvgFirstLoad(num){
-		return (firstLoad[num].sort(function(a,b){return a-b})[0]+firstLoad[num].sort(function(a,b){return a-b})[1]+firstLoad[num].sort(function(a,b){return a-b})[2])/3;
-	}
-	function getAvgCacheLoad(num){
-		return (cachedTimes[num].sort(function(a,b){return a-b})[0]+cachedTimes[num].sort(function(a,b){return a-b})[1]+cachedTimes[num].sort(function(a,b){return a-b})[2])/3;
-	}
 	
+	function printFinalData()
+	{
+		for (var j=0;j<sites.length;j++)
+		{ 
+			document.getElementById("loadingtime").innerHTML = document.getElementById("loadingtime").innerHTML+"<font color='blue'>"+sites[j]+" first load took "+firstLoad[j]+" and cached load takes " + (cachedTimes[j]/(TIMES_TO_LOAD-1)) + " on average</font></br>";
+		}
+		for (var j=0;j<sites.length;j++)
+		{ 
+			if(((cachedTimes[j]/(TIMES_TO_LOAD-1))*viewRatios[j])>=firstLoad[j])
+				document.getElementById("loadingtime").innerHTML = document.getElementById("loadingtime").innerHTML+"<font color='green'>You have visited"+sites[j]+"!</font></br>";
+			else
+				document.getElementById("loadingtime").innerHTML = document.getElementById("loadingtime").innerHTML+"<font color='purple'>You did not visited"+sites[j]+"!</font></br>";
+		}
+	}
 </script>
 </head>
 <body>
-<div id="loadingtime1"></div>
-<div id="loadingtime2"></div>
-<div id="loadingtime3"></div>
-<div id="loadingtime4"></div>
-<div id="loadingtime5"></div>
-<div id="loadingtimefinal"></div>
+<div id="loadingtime"></div>
 <br>
-	<iframe id="iframe1" src="http://google.com" width="0" height="0" style="display:none;" onload="pageloadingtime('1');"></iframe>
-	<iframe id="iframe2" src="http://google.com" width="0" height="0" style="display:none;" onload="pageloadingtime('2');"></iframe>
-	<iframe id="iframe3" src="http://google.com" width="0" height="0" style="display:none;" onload="pageloadingtime('3');"></iframe>
-	<iframe id="iframe4" src="http://google.com" width="0" height="0" style="display:none;" onload="pageloadingtime('4');"></iframe>
-	<iframe id="iframe5" src="http://google.com" width="0" height="0" style="display:none;" onload="pageloadingtime('5');"></iframe>
+	<iframe id="iframe1" src="http://google.com" width="600" height="600" onload="pageloadingtime();"></iframe>
 </body>
 <html>
