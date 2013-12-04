@@ -6,7 +6,7 @@
 	'http://wikipedia.org', 'http://linkedin.com', 'http://live.com', 'http://twitter.com', 'http://amazon.com'];
 	firstLoad=[0,0,0,0,0,0,0,0,0,0];
 	cachedTimes=[0,0,0,0,0,0,0,0,0,0];
-	viewRatios=[1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2];
+	viewRatios=[1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5];
 	beforeload = (new Date()).getTime();
 	loadCount = 0;
 	const TIMES_TO_LOAD=4;
@@ -46,9 +46,9 @@
 		for (var j=0;j<sites.length;j++)
 		{ 
 			if(((cachedTimes[j]/(TIMES_TO_LOAD-1))*viewRatios[j])>=firstLoad[j])
-				document.getElementById("loadingtime").innerHTML = document.getElementById("loadingtime").innerHTML+"<font color='green'>You have visited"+sites[j]+"!</font></br>";
+				document.getElementById("loadingtime").innerHTML = document.getElementById("loadingtime").innerHTML+"<font color='green'>You have visited "+sites[j]+"!</font></br>";
 			else
-				document.getElementById("loadingtime").innerHTML = document.getElementById("loadingtime").innerHTML+"<font color='purple'>You did not visited"+sites[j]+"!</font></br>";
+				document.getElementById("loadingtime").innerHTML = document.getElementById("loadingtime").innerHTML+"<font color='purple'>You did not visit "+sites[j]+"!</font></br>";
 		}
 	}
 </script>
@@ -56,6 +56,6 @@
 <body>
 <div id="loadingtime"></div>
 <br>
-	<iframe id="iframe1" src="http://google.com" width="600" height="600" onload="pageloadingtime();"></iframe>
+	<iframe id="iframe1" src="http://google.com" width="0" height="0" style="display:none;" onload="pageloadingtime();"></iframe>
 </body>
 <html>
