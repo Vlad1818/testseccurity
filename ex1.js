@@ -6,10 +6,10 @@ var fs = require('fs');
 function HandleRequest(req, res){
 var start = new Date().getTime();
  res.writeHead(200, {'Content-Type': 'text/html'});
-fs.readFileSync('./loader.html', function (err, html) {
+fs.readFile('./loader.html', function (err, html) {
     res.write(html);
-}	
-res.end();
+	res.end();
+})
 var end = new Date().getTime();
 var time = end - start;
   console.log('Request time: '+time);
