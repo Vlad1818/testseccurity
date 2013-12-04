@@ -1,9 +1,9 @@
 <html>
 <head>
 <script type="text/javascript">
-	i=0;
+	i=[0,0,0,0,0];
 	sites = ['http://google.com', 'http://facebook.com', 'http://youtube.com', 'http://yahoo.com', 
-	'http://wikipedia.org', 'http://linkedin.com', 'http://live.com', 'http://twitter.com', 'http://amazon.com', 'http://taobao.com'];
+	'http://wikipedia.org', 'http://linkedin.com', 'http://live.com', 'http://twitter.com', 'http://amazon.com'];
 	firstLoad=[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]];
 	cachedTimes=[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]];
 	viewRatios=[1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2];
@@ -11,66 +11,53 @@
 	beforeload = [temp,temp,temp,temp,temp]
 	loadCount = [0,0,0,0,0];
 	const TIMES_TO_LOAD=2;
-	finishedFrames = [0,0,0,0,0];
+	finishedFrames = [0,0,0,0,0,0,0,0,0,0]
 	finishedSites = 0;
 	
 	function pageloadingtime(pagenum)
 	{
+	alert(pagenum);
 		var num = parseInt(pagenum) - 1;
 		var afterload = (new Date()).getTime();
 		var seconds = (afterload-beforeload[num])/1000;
 		if(loadCount[num] == 0){
-			firstLoad[i][num]=seconds;}
+			firstLoad[i[num]][num]=seconds;}
 		else{
-			cachedTimes[i][num]+=seconds;}
-		document.getElementById("loadingtime"+pagenum).innerHTML = document.getElementById("loadingtime"+pagenum).innerHTML+"<font color='red'>"+sites[i]+" Load "+(loadCount[num]+1)+" took " + seconds + " seconds</font></br>";
+			cachedTimes[i[num]][num]+=seconds;}
+		document.getElementById("loadingtime"+pagenum).innerHTML = document.getElementById("loadingtime"+pagenum).innerHTML+"<font color='red'>"+sites[i[num]]+" Load "+(loadCount[num]+1)+" took " + seconds + " seconds</font></br>";
 		loadCount[num]++;
 		if(loadCount[num]==TIMES_TO_LOAD){
 			loadCount[num]=0;
-			finishedFrames[num]++;
+			i[num]++;
 		}
-		else{
-			var f = document.getElementById('iframe'+pagenum);
+		if(i[num]==sites.length){
+			finishedSites++;
+			if(finishedSites==sites.length)
+				printFinalData();
+		}
+		var f = document.getElementById('iframe'+pagenum);
+		if(i[num]<sites.length){
 			beforeload[num] = (new Date()).getTime();
-			f.src = sites[i];
-		}
-		if(getSum(finishedFrames)==5){
-			finishedFrames=[0,0,0,0,0];
-			printFinalData(i);
+			f.src = sites[i[num]];
 		}
 	}
 	
-	function getSum(){
-		var sum=0;
-		for (var j=0;j<5;j++){
-			sum+=finishedFrames[j];
-		}
-		return sum;
-	}
-	
-	function printFinalData(siteNum)
+	function printFinalData()
 	{
-		var num= parseInt(siteNum);
-	//	for (var j=0;j<sites.length;j++)
-	//	{ 
-			var first = getAvgFirstLoad(num);
-			var cached = getAvgCacheLoad(num);
-			document.getElementById("loadingtimefinal").innerHTML = document.getElementById("loadingtimefinal").innerHTML+"<font color='blue'>"+sites[num]+" first load took "+first+" and cached load took " + cached + "</font></br>";
-	//	}
-	//	for (var j=0;j<sites.length;j++)
-	//	{ 
-			var first = getAvgFirstLoad(num);
-			var cached = getAvgCacheLoad(num);
-			if(cached*viewRatios[num]>=first)
-				document.getElementById("loadingtimefinal").innerHTML = document.getElementById("loadingtimefinal").innerHTML+"<font color='green'>You have visited "+sites[num]+"!</font></br>";
+		for (var j=0;j<sites.length;j++)
+		{ 
+			var first = getAvgFirstLoad(j);
+			var cached = getAvgCacheLoad(j);
+			document.getElementById("loadingtimefinal").innerHTML = document.getElementById("loadingtimefinal").innerHTML+"<font color='blue'>"+sites[j]+" first load took "+first+" and cached load took " + cached + "</font></br>";
+		}
+		for (var j=0;j<sites.length;j++)
+		{ 
+			var first = getAvgFirstLoad(j);
+			var cached = getAvgCacheLoad(j);
+			if(cached*viewRatios[j])>=first)
+				document.getElementById("loadingtimefinal").innerHTML = document.getElementById("loadingtimefinal").innerHTML+"<font color='green'>You have visited"+sites[j]+"!</font></br>";
 			else
-				document.getElementById("loadingtimefinal").innerHTML = document.getElementById("loadingtimefinal").innerHTML+"<font color='purple'>You did not visit "+sites[num]+"!</font></br>";
-	//	}
-		i++;
-		for (var j=1;j<=5;j++){
-			var f = document.getElementById('iframe'+j);
-			beforeload[j] = (new Date()).getTime();
-			f.src = sites[i];
+				document.getElementById("loadingtimefinal").innerHTML = document.getElementById("loadingtimefinal").innerHTML+"<font color='purple'>You did not visited"+sites[j]+"!</font></br>";
 		}
 	}
 	function getAvgFirstLoad(num){
