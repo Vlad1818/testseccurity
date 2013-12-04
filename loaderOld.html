@@ -1,0 +1,27 @@
+<html>
+<head>
+<script type="text/javascript">
+i=0;
+sites = ['http://google.com', 'http://facebook.com', 'http://youtube.com', 'http://yahoo.com', 
+'http://wikipedia.org', 'http://linkedin.com', 'http://live.com', 'http://twitter.com', 'http://amazon.com', 'http://taobao.com'];
+
+beforeload = (new Date()).getTime();
+function pageloadingtime()
+{
+    var afterload = (new Date()).getTime();
+    var secondes = (afterload-beforeload)/1000;
+    document.getElementById("loadingtime").innerHTML = document.getElementById("loadingtime").innerHTML+"<font color='red'>"+sites[i]+" Load took " + secondes + " seconds</font></br>";
+	var f = document.getElementById('iframe1');
+i=i+1;
+if(i<sites.length){
+f.src = sites[i];}
+beforeload = (new Date()).getTime();
+}
+</script>
+</head>
+<body>
+<div id="loadingtime"></div>
+<br>
+	<iframe id="iframe1" src="http://google.com" width="600" height="600" onload="pageloadingtime();"></iframe>
+</body>
+<html>
