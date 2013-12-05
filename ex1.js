@@ -15,18 +15,17 @@ var time = end - start;
   console.log('Request time: '+time);
 };
 
-app.get('/onlygood', function(req, res, next){
-  HandleRequest(req, res,'./onlygood.html');
-  next();
-});
-
 app.get('/', function(req, res, next){
   HandleRequest(req, res,'./loader.html');
   next();
 });
+app.get('/onlygood', function(req, res, next){
+  HandleRequest(req, res,'./onlygood.html');
+});
 
-app.get('/:query', function(req, res, next){
-  console.log('Request recieved, query: ', query);
+
+app.get('/', function(req, res, next){
+  console.log('Request recieved, query: ', url.parse(req.url).query);
 });
 
 
