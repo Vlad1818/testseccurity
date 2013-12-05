@@ -1,0 +1,16 @@
+<html>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs>/qtip/jquery.qtip.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/qtip/ajax.js"></script>
+<script type="text/javascript">
+   var contentsize;
+$.ajax('http://google.com',function(data,textstatus,request){
+         contentsize = request.getResponseHeader("Content-Length");
+         alert(contentsize);
+        });
+</script>
+<body>
+<div id="loadingtime"></div>
+<br>
+</body>
+<html>
